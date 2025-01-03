@@ -29,19 +29,6 @@ How It Works
 
     Cleanup: Remove the decoded JavaScript after execution to prevent exposure.
 
-File Structure
-
-.
-├── python/
-│   └── js_to_bin_converter.py  # Python script for binary conversion
-├── server/
-│   ├── decode_js.php           # PHP script for decoding binary files
-│   └── three.bin               # Example binary file (converted from a JS file)
-├── client/
-│   ├── index.html              # HTML file with dynamic JavaScript loader
-│   └── main.js                 # JavaScript file for AJAX requests and execution
-└── README.md                   # Documentation
-
 Setup Instructions
 Prerequisites
 
