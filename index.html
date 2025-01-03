@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Encrypted Loader</title>
+</head>
+<body>
+    <h1>Welcome to My 3D Application</h1>
+    <p>Loading encrypted 3D content...</p>
+
+    <script>
+        // Function to load and execute the JavaScript from binary
+        async function loadAndExecuteBinary(filePath) {
+            try {
+                // Send an AJAX request to the server to fetch the .bin file
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error(`Failed to load ${filePath}: ${response.statusText}`);
+                
+                // Convert the binary data to an ArrayBuffer
+                const binaryData = await response.arrayBuffer();
+
+                // Decode the binary data into a string (Base64 to plain JS code)
+                const jsCode = atob(new TextDecoder("utf-8").decode(new Uint8Array(binaryData)));
+
+                // Dynamically inject the decoded JavaScript into the document
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.textContent = jsCode;
+                document.head.appendChild(script);
+
+                // Once the script is loaded, call the init function
+                script.onload = () => {
+                    // Assuming the init() function is present in the injected JS code
+                    if (typeof init === 'function') {
+                        init();
+                    }
+
+                    // Clean up: Remove the injected script
+                    document.head.removeChild(script);
+                    console.log("Encrypted JS executed and cleaned up.");
+                };
+            } catch (error) {
+                console.error('Error loading and executing the binary JS:', error);
+            }
+        }
+
+        // Run after the HTML content is fully loaded
+        window.addEventListener('DOMContentLoaded', function() {
+            // Path to the binary file on your other domain
+            const binaryFilePath = 'https://your-other-domain.com/three.bin';
+            loadAndExecuteBinary(binaryFilePath);
+        });
+    </script>
+</body>
+</html>
